@@ -38,8 +38,16 @@ def should_explore(epsilon, rng):
     u = rng.random()
     return (  u < epsilon )
 
-# Step 6 - epsilon_greedy_action (not yet solved)
-# TODO: implement
+# Step 6 - epsilon_greedy_action
+def epsilon_greedy_action(q_table, state, epsilon, action_space, rng):
+    """Return an epsilon-greedy action for the given state."""
+    # Check if we should explore based on the epsilon value
+    if should_explore(epsilon, rng):
+        # Sample a completely random action from the action space
+        return sample_random_action(action_space)
+    else:
+        # Exploit the best action from the Q-table for the current state
+        return greedy_action(q_table, state)
 
 # Step 7 - decay_epsilon (not yet solved)
 # TODO: implement
