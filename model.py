@@ -87,8 +87,8 @@ def interaction_step(env, q_table, state, epsilon, alpha, gamma, rng):
     # Step C: Determine if the episode is finished
     done = terminated or truncated
     
-    # Step D: Apply the Q-learning update in place
-    q_learning_update(q_table, state, action, next_state, reward, alpha, gamma, done)
+    # Step D: Apply the Q-learning update in place with the correct argument order
+    q_learning_update(q_table, state, action, reward, next_state, done, alpha, gamma)
     
     # Step E: Return the tuple ensuring standard Python types
     return (int(next_state), float(reward), bool(done))
