@@ -116,8 +116,40 @@ def run_training_episode(env, q_table, epsilon, alpha, gamma, rng, max_steps=200
     # Step C: Return the total scalar reward as a clean float
     return float(total_reward)
 
-# Step 13 - train_q_learning (not yet solved)
-# TODO: implement
+# Step 13 - train_q_learning
+def train_q_learning(
+    env, 
+    num_episodes, 
+    alpha=0.8, 
+    gamma=0.95, 
+    epsilon_start=1.0, 
+    epsilon_min=0.01, 
+    epsilon_decay=0.99, 
+    seed=0, 
+    max_steps=200
+):
+    # Step A: Seed all required components for reproducibility
+    rng = np.random.default_rng(seed)
+    env.action_space.seed(seed)
+    
+   # Step B: Initialize a fresh Q-table using the exact arguments required by Step 001
+    q_table = init_q_table(env.observation_space.n, env.action_space.n)
+    episode_returns = []
+    epsilon = epsilon_start
+    
+    # Step C: Loop through the number of episodes
+    for _ in range(num_episodes):
+        # Run a complete training episode using your helper from Step 012
+        total_reward = run_training_episode(
+            env, q_table, epsilon, alpha, gamma, rng, max_steps=max_steps
+        )
+        episode_returns.append(total_reward)
+        
+        # Step D: Decay epsilon using your helper from Step 007
+        epsilon = decay_epsilon(epsilon, epsilon_decay, epsilon_min)
+        
+    # Return the final trained Q-table and the list of episode returns
+    return q_table, episode_returns
 
 # Step 14 - extract_greedy_policy (not yet solved)
 # TODO: implement
