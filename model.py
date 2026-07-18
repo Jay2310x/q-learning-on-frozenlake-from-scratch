@@ -57,12 +57,11 @@ def decay_epsilon(epsilon, decay_rate, min_epsilon):
 # Step 8 - td_target
 def td_target(reward, gamma, q_table, next_state, done):
     # TODO: compute r + gamma * max_a Q(next_state, a), zeroing the bootstrap when done.
-    # if done : 
-    #     return float(reward)
-    # max_a = max_q_value(q_table,next_state)
-    # return reward + gamma * max_a
-    max_a = max_q_value(q_table,next_state)
-    return reward + gamma * max_a * (1-int(done))
+    if done:
+        return float(reward)
+    
+    max_a = max_q_value(q_table, next_state)
+    return float(reward + gamma * max_a)
 
 # Step 9 - td_error
 def td_error(target, q_table, state, action):
@@ -77,8 +76,22 @@ def q_learning_update(q_table, state, action, reward, next_state, done, alpha, g
     q_table[state, action] += alpha * error
     return float(q_table[state, action])
 
-# Step 11 - interaction_step (not yet solved)
-# TODO: implement
+# Step 11 - interaction_step
+def interaction_step(env, q_table, state, epsilon, alpha, gamma, rng):
+    # Step A: Pass the full env.action_space object as requested by the description
+    action = epsilon_greedy_action( q_table, state, epsilon, env.action_space,  rng)
+    
+    # Step B: Step the environment with the selected action
+    next_state, reward, terminated, truncated, info = env.step(action)
+    
+    # Step C: Determine if the episode is finished
+    done = terminated or truncated
+    
+    # Step D: Apply the Q-learning update in place
+    q_learning_update(q_table, state, action, next_state, reward, alpha, gamma, done)
+    
+    # Step E: Return the tuple ensuring standard Python types
+    return (int(next_state), float(reward), bool(done))
 
 # Step 12 - run_training_episode (not yet solved)
 # TODO: implement
