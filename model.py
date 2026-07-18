@@ -158,8 +158,31 @@ def extract_greedy_policy(q_table):
     # Find the argmax along the action axis (axis 1) and explicitly cast to int64
     return np.argmax(q_table, axis=1).astype(np.int64)
 
-# Step 15 - run_greedy_episode (not yet solved)
-# TODO: implement
+# Step 15 - run_greedy_episode
+def run_greedy_episode(env, policy, seed=None, max_steps=200):
+    """Run one greedy episode and return True if the goal was reached."""
+    # Step A: Reset the environment with the provided seed
+    state, _ = env.reset(seed=seed)
+    
+    success = False
+    
+    # Step B: Loop up to max_steps
+    for _ in range(max_steps):
+        # Select the deterministic action for the current state
+        action = int(policy[state])
+        
+        # Step the environment forward
+        state, reward, done, truncated, _ = env.step(action)
+        
+        # On FrozenLake, reaching the goal provides a positive reward
+        if reward > 0:
+            success = True
+            
+        # Break out early if the episode ends (fell in a hole or reached goal)
+        if done or truncated:
+            break
+            
+    return bool(success)
 
 # Step 16 - evaluate_success_rate (not yet solved)
 # TODO: implement
