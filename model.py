@@ -184,6 +184,20 @@ def run_greedy_episode(env, policy, seed=None, max_steps=200):
             
     return bool(success)
 
-# Step 16 - evaluate_success_rate (not yet solved)
-# TODO: implement
+# Step 16 - evaluate_success_rate
+def evaluate_success_rate(env, policy, num_episodes, seed=0, max_steps=200):
+    # Track how many episodes successfully reach the goal
+    success_count = 0
+    
+    # Run the evaluation episodes
+    for i in range(num_episodes):
+        # Derive a unique, reproducible seed for each independent episode
+        episode_seed = seed + i
+        
+        # Reuse your run_greedy_episode function from Step 015
+        if run_greedy_episode(env, policy, seed=episode_seed, max_steps=max_steps):
+            success_count += 1
+            
+    # Return the fraction of episodes that ended with a success as a float
+    return float(success_count / num_episodes)
 
